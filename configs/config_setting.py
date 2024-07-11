@@ -20,11 +20,11 @@ class setting_config:
 
     datasets = 'ISIC2018'
     if datasets == 'ISIC2017':
-        data_path = './dataset/ISIC2017/'
+        data_path = './datasets/ISIC2017/'
     elif datasets == 'ISIC2018':
-        data_path = './dataset/ISIC2018/'
+        data_path = './datasets/ISIC2018/'
     elif datasets == 'PH2':
-        data_path = './dataset/PH2/'
+        data_path = './datasets/PH2/'
     else:
         raise Exception('datasets in not right!')
 
