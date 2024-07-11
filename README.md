@@ -17,7 +17,7 @@ pip install mamba_ssm==1.0.1  # mmamba_ssm-1.0.1+cu118torch1.13cxx11abiFALSE-cp3
 pip install scikit-learn matplotlib thop h5py SimpleITK scikit-image medpy yacs
 ```
 
-**1. Datasets.** </br>
+**1. Datasets** </br>
 You can refer to [UltraLight-VM-UNet's](https://github.com/wurenkai/UltraLight-VM-UNet) approach to processing datasets, or download the .npy files of these datasets from this [link](https://drive.google.com/drive/folders/1aNuwMmOJq8X8gCKOjy6gDar1G5PieoXi), and then organize the .npy files into the following format:
 
 './datasets/'
