@@ -4,8 +4,8 @@
 The environment installation procedure can be followed by [UltraLight-VM-UNet](https://github.com/wurenkai/UltraLight-VM-UNet), or by following the steps below (python=3.8):</br>
 
 ```
-conda create -n vmunet python=3.8
-conda activate vmunet
+conda create -n DUMFNet python=3.8
+conda activate DUMFNet
 pip install torch==1.13.0 torchvision==0.14.0 torchaudio==0.13.0 --extra-index-url https://download.pytorch.org/whl/cu117
 pip install packaging
 pip install timm==0.4.12
@@ -50,13 +50,9 @@ You can refer to [UltraLight-VM-UNet's](https://github.com/wurenkai/UltraLight-V
 python train.py
 ```
 
-- After trianing, you could obtain the outputs in './results/' </br>
-
 **3. Test the DUMFNet**  
 First, in the test.py file, you should change the address of the checkpoint in 'resume_model'.
 
 ```
 python test.py
 ```
-
-- After testing, you could obtain the outputs in './results/' </br>
