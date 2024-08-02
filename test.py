@@ -2,10 +2,10 @@ import torch
 from torch import nn
 from torch.cuda.amp import autocast, GradScaler
 from torch.utils.data import DataLoader
-from loader import *
+from dataloader.loader import *
 
-from models.UltraLight_VM_UNet import UltraLight_VM_UNet
-from engine import *
+from models.DUMFNet import DUMFNet
+from utils.engine import *
 import os
 import sys
 os.environ["CUDA_VISIBLE_DEVICES"] = "0" # "0, 1, 2, 3"
