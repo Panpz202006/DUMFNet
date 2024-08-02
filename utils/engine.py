@@ -3,7 +3,7 @@ from tqdm import tqdm
 import torch
 from torch.cuda.amp import autocast as autocast
 from sklearn.metrics import confusion_matrix
-from utils import save_imgs
+from util import save_imgs
 
 
 def train_one_epoch(train_loader,

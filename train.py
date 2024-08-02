@@ -10,7 +10,7 @@ import os
 import sys
 os.environ["CUDA_VISIBLE_DEVICES"] = "0" # "0, 1, 2, 3"
 
-from utils.utils import *
+from utils.util import *
 from configs.config_setting import setting_config
 
 import warnings
