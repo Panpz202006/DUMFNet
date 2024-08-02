@@ -223,33 +223,23 @@ def get_scheduler(config, optimizer):
 
 
 def save_imgs(img, msk, msk_pred, i, save_path, datasets, threshold=0.5, test_data_name=None):
-    img = img.squeeze(0).permute(1,2,0).detach().cpu().numpy()
+    img = img.squeeze(0).permute(1, 2, 0).detach().cpu().numpy()
     img = img / 255. if img.max() > 1.1 else img
     if datasets == 'retinal':
         msk = np.squeeze(msk, axis=0)
         msk_pred = np.squeeze(msk_pred, axis=0)
     else:
         msk = np.where(np.squeeze(msk, axis=0) > 0.5, 1, 0)
-        msk_pred = np.where(np.squeeze(msk_pred, axis=0) > threshold, 1, 0) 
+        msk_pred = np.where(np.squeeze(msk_pred, axis=0) > threshold, 1, 0)
 
-    plt.figure(figsize=(7,15))
+    # 保存图像
+    plt.imsave(save_path + str(i) + '_1.png', img)
 
-    plt.subplot(3,1,1)
-    plt.imshow(img)
-    plt.axis('off')
+    # 保存掩码
+    plt.imsave(save_path + str(i) + '_2.png', msk, cmap='gray')
 
-    plt.subplot(3,1,2)
-    plt.imshow(msk, cmap= 'gray')
-    plt.axis('off')
-
-    plt.subplot(3,1,3)
-    plt.imshow(msk_pred, cmap = 'gray')
-    plt.axis('off')
-
-    if test_data_name is not None:
-        save_path = save_path + test_data_name + '_'
-    plt.savefig(save_path + str(i) +'.png')
-    plt.close()
+    # 保存预测掩码
+    plt.imsave(save_path + str(i) + '_3.png', msk_pred, cmap='gray')
     
 
 
