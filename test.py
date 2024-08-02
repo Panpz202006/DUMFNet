@@ -10,7 +10,7 @@ import os
 import sys
 os.environ["CUDA_VISIBLE_DEVICES"] = "0" # "0, 1, 2, 3"
 
-from utils import *
+from utils.util import *
 from configs.config_setting import setting_config
 
 import warnings
@@ -49,7 +49,7 @@ def main(config):
 
     print('#----------Prepareing Models----------#')
     model_cfg = config.model_config    
-    model = UltraLight_VM_UNet(num_classes=model_cfg['num_classes'], 
+    model = DUMFNet(num_classes=model_cfg['num_classes'],
                                input_channels=model_cfg['input_channels'], 
                                c_list=model_cfg['c_list'], 
                                split_att=model_cfg['split_att'], 
