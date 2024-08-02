@@ -16,7 +16,6 @@ from configs.config_setting import setting_config
 import warnings
 warnings.filterwarnings("ignore")
 
-
 def main(config):
 
     print('#----------Creating logger----------#')
