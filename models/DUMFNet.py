@@ -174,10 +174,10 @@ class MLP(nn.Module):
 
 
 class MEM(nn.Module):
-    def __init__(self, dim1, dim2):
+    def __init__(self, input_dim, output_dim):
         super().__init__()
-        self.dim1=dim1
-        self.dim2=dim2
+        self.dim1=input_dim
+        self.dim2=output_dim
         self.CNN = nn.Sequential(
             nn.Conv2d(self.dim1, self.dim2, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
@@ -189,8 +189,8 @@ class MEM(nn.Module):
         self.MSA_attn = Attention(dim=self.dim1, num_heads=8)
         self.MSA_conv = nn.Conv2d(self.dim1, self.dim2, kernel_size=1)
         self.MLP = MLP(dim1=self.dim1, dim2=self.dim2)
-        self.LSPVM_pvm = PVMLayer(input_dim=self.dim1, output_dim=self.dim1)
-        self.ebn=nn.GroupNorm(4, self,dim2)
+        self.LSPVM_pvm = PVMLayer(input_dim=self.dim1, output_dim=self.dim2)
+        self.ebn=nn.GroupNorm(4, self.dim2)
         self.p = 2
 
     def forward(self, x):
