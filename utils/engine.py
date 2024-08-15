@@ -29,14 +29,14 @@ def train_one_epoch(train_loader,
         images, targets = images.cuda(non_blocking=True).float(), targets.cuda(non_blocking=True).float()
         if config.amp:
             with autocast():
-                out, my_out = model(images)
-                loss = criterion(out, targets) + 2 * criterion(my_out, targets)
+                out1, out2 = model(images)
+                loss = criterion(out1, targets) + 2 * criterion(out2, targets)
             scaler.scale(loss).backward()
             scaler.step(optimizer)
             scaler.update()
         else:
-            out, my_out = model(images)
-            loss = criterion(out, targets) + 2 * criterion(my_out, targets)
+            out1, out2 = model(images)
+            loss = criterion(out1, targets) + 2 * criterion(out2, targets)
             loss.backward()
             optimizer.step()
 
