@@ -85,7 +85,11 @@ python test.py
 
 ## 6. Comparison With State of the Arts
 
-Visualization of some predictions.
+Performance comparison of the proposed method against the SOTA approaches on ISIC2017, ISIC2018 and $\text{PH}^2$, where the best two results are represented in red and blue, respectively.
+
+<div align="center">
+<img src="Figs/table1.png" />
+</div>
 
 
 
