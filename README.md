@@ -83,6 +83,12 @@ python test.py
 
 
 
-## 6. Acknowledgement
+## 6. Comparison With State of the Arts
+
+Visualization of some predictions.
+
+
+
+## 7. Acknowledgement
 
 Thanks to [Vim](https://github.com/hustvl/Vim), [VM-UNet](https://github.com/JCruan519/VM-UNet) and [UltraLight-VM-UNet](https://github.com/wurenkai/UltraLight-VM-UNet) for their outstanding works.
