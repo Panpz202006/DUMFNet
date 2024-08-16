@@ -1,12 +1,19 @@
 # DUMFNet
 
-This is the official code repository for "DUMFNet: Enhanced Medical Image Segmentation with Multi-visual Encoding and Local Scanning".
+## 0. Abstract
+
+With the increasing adoption of the Mamba framework, state-space models have shown promising results in computer vision. However, these models have not consistently outperformed their CNN-based or Transformer-based counterparts. This limitation is primarily due to their pre-defined scanning schedules, which lack positional awareness and disproportionately emphasize posterior tokens, making the extraction of local region features challenging. Furthermore, most of existing Mamba-based works often overlook the benefits of integrating multiple visual encoding strategies. To address these challenges, we propose a novel DoubleU-Net framework with multiple visual encoding strategies and a local-based scanning mechanism. The comparative 
+\& ablation experiments demonstrate that DUMFNet is superior to or competitive with the existing SOTA methods.
+
+
+
+## 1. Overview
 
 ![DUMFNet](DUMFNet.png)
 
 
 
-## 0. Main Environments
+## 2. Main Environments
 
 The environment installation procedure can be followed by [UltraLight-VM-UNet](https://github.com/wurenkai/UltraLight-VM-UNet), or by following the steps below (python=3.8):
 
@@ -26,7 +33,7 @@ pip install scikit-learn matplotlib thop h5py SimpleITK scikit-image medpy yacs
 
 
 
-## 1.Datasets
+## 3. Datasets
 
 You can refer to [UltraLight-VM-UNet's](https://github.com/wurenkai/UltraLight-VM-UNet) approach to processing datasets, or download the .npy files of these datasets from this [link](https://drive.google.com/drive/folders/1aNuwMmOJq8X8gCKOjy6gDar1G5PieoXi), and then organize the .npy files into the following format:
 
@@ -56,7 +63,7 @@ You can refer to [UltraLight-VM-UNet's](https://github.com/wurenkai/UltraLight-V
 
 
 
-## 2. Train the DUMFNet
+## 4. Train the DUMFNet
 
 ```
 python train.py
@@ -64,7 +71,7 @@ python train.py
 
 
 
-## 3. Test the DUMFNet 
+## 5. Test the DUMFNet 
 
 First, in the test.py file, you should change the address of the checkpoint in 'resume_model'.
 
@@ -74,6 +81,6 @@ python test.py
 
 
 
-## 4.Acknowledgement
+## 6. Acknowledgement
 
-Thanks to [Vim](https://github.com/hustvl/Vim), [VM-UNet](https://github.com/JCruan519/VM-UNet) and [UltraLight-VM-UNet](https://github.com/wurenkai/UltraLight-VM-UNet) for their outstanding work.
+Thanks to [Vim](https://github.com/hustvl/Vim), [VM-UNet](https://github.com/JCruan519/VM-UNet) and [UltraLight-VM-UNet](https://github.com/wurenkai/UltraLight-VM-UNet) for their outstanding works.
