@@ -9,7 +9,7 @@ With the increasing adoption of the Mamba framework, state-space models have sho
 
 ## 1. Overview
 
-![DUMFNet](DUMFNet.png)
+<img src="https://github.com/Panpz202006/DUMFNet/blob/main/Figs/DUMFNet.png" />
 
 
 
