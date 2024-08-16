@@ -4,7 +4,10 @@ This is the official code repository for "DUMFNet: Enhanced Medical Image Segmen
 
 ![DUMFNet](DUMFNet.png)
 
-# 0. Main Environments
+
+
+## 0. Main Environments
+
 The environment installation procedure can be followed by [UltraLight-VM-UNet](https://github.com/wurenkai/UltraLight-VM-UNet), or by following the steps below (python=3.8):
 
 ```
@@ -21,7 +24,10 @@ pip install mamba_ssm==1.0.1  # mmamba_ssm-1.0.1+cu118torch1.13cxx11abiFALSE-cp3
 pip install scikit-learn matplotlib thop h5py SimpleITK scikit-image medpy yacs
 ```
 
-# 1. Datasets
+
+
+## 1.Datasets
+
 You can refer to [UltraLight-VM-UNet's](https://github.com/wurenkai/UltraLight-VM-UNet) approach to processing datasets, or download the .npy files of these datasets from this [link](https://drive.google.com/drive/folders/1aNuwMmOJq8X8gCKOjy6gDar1G5PieoXi), and then organize the .npy files into the following format:
 
 './datasets/'
@@ -48,19 +54,26 @@ You can refer to [UltraLight-VM-UNet's](https://github.com/wurenkai/UltraLight-V
   - mask_val.npy
   - mask_test.npy
 
-# 2. Train the DUMFNet
+
+
+## 2. Train the DUMFNet
 
 ```
 python train.py
 ```
 
-# 3. Test the DUMFNet 
+
+
+## 3. Test the DUMFNet 
+
 First, in the test.py file, you should change the address of the checkpoint in 'resume_model'.
 
 ```
 python test.py
 ```
 
-# 4. Acknowledgement
+
+
+## 4.Acknowledgement
 
 Thanks to [Vim](https://github.com/hustvl/Vim), [VM-UNet](https://github.com/JCruan519/VM-UNet) and [UltraLight-VM-UNet](https://github.com/wurenkai/UltraLight-VM-UNet) for their outstanding work.
