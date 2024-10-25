@@ -6,6 +6,7 @@ from timm.models.layers import trunc_normal_
 import math
 from mamba_ssm import Mamba
 
+
 class PVMLayer(nn.Module):
     def __init__(self, input_dim, output_dim, d_state=16, d_conv=4, expand=2):
         super().__init__()
@@ -114,7 +115,7 @@ class ABM(nn.Module):
         self.catt = Channel_Att_Bridge(c_list, split_att=split_att)
         self.satt = Spatial_Att_Bridge()
 
-    def forward(self, t1, t2, t3, t4, t5):
+    def forward(self, t1, t2, t3, t4, t5, t6):
         r1, r2, r3, r4, r5 = t1, t2, t3, t4, t5
 
         satt1, satt2, satt3, satt4, satt5 = self.satt(t1, t2, t3, t4, t5)
@@ -126,7 +127,7 @@ class ABM(nn.Module):
         catt1, catt2, catt3, catt4, catt5 = self.catt(t1, t2, t3, t4, t5)
         t1, t2, t3, t4, t5 = catt1 * t1, catt2 * t2, catt3 * t3, catt4 * t4, catt5 * t5
 
-        return t1 + r1_, t2 + r2_, t3 + r3_, t4 + r4_, t5 + r5_
+        return t1 + r1_, t2 + r2_, t3 + r3_, t4 + r4_, t5 + r5_, t6
 
 
 class Attention(nn.Module):
@@ -176,8 +177,8 @@ class MLP(nn.Module):
 class MEM(nn.Module):
     def __init__(self, input_dim, output_dim):
         super().__init__()
-        self.dim1=input_dim
-        self.dim2=output_dim
+        self.dim1 = input_dim
+        self.dim2 = output_dim
         self.CNN = nn.Sequential(
             nn.Conv2d(self.dim1, self.dim2, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
@@ -190,7 +191,7 @@ class MEM(nn.Module):
         self.MSA_conv = nn.Conv2d(self.dim1, self.dim2, kernel_size=1)
         self.MLP = MLP(dim1=self.dim1, dim2=self.dim2)
         self.LSPVM_pvm = PVMLayer(input_dim=self.dim1, output_dim=self.dim2)
-        self.ebn=nn.GroupNorm(4, self.dim2)
+        self.ebn = nn.GroupNorm(4, self.dim2)
         self.p = 2
 
     def forward(self, x):
@@ -224,15 +225,16 @@ class DUMFNet(nn.Module):
         super().__init__()
 
         self.bridge = bridge
+        self.t = 0
         self.encoder1 = nn.Conv2d(input_channels, c_list[0], 3, stride=1, padding=1)
         self.encoder2 = nn.Conv2d(c_list[0], c_list[1], 3, stride=1, padding=1)
         self.encoder3 = nn.Conv2d(c_list[1], c_list[2], 3, stride=1, padding=1)
-        self.mem=MEM(input_dim=c_list[2], output_dim=c_list[3])
+        self.mem = MEM(input_dim=c_list[2], output_dim=c_list[3])
         self.encoder5 = PVMLayer(input_dim=c_list[3], output_dim=c_list[4])
         self.encoder6 = PVMLayer(input_dim=c_list[4], output_dim=c_list[5])
 
         if bridge:
-            self.scab = ABM(c_list, split_att)
+            self.abm = ABM(c_list, split_att)
 
         self.decoder1 = PVMLayer(input_dim=c_list[5], output_dim=c_list[4])
         self.decoder2 = PVMLayer(input_dim=c_list[4], output_dim=c_list[3])
@@ -260,7 +262,7 @@ class DUMFNet(nn.Module):
         self.double_encoder6 = PVMLayer(input_dim=c_list[4], output_dim=c_list[5])
 
         if bridge:
-            self.double_scab = ABM(c_list, split_att)
+            self.double_abm = ABM(c_list, split_att)
 
         self.double_decoder1 = PVMLayer(input_dim=c_list[5], output_dim=c_list[4])
         self.double_decoder2 = PVMLayer(input_dim=c_list[4], output_dim=c_list[3])
@@ -308,15 +310,18 @@ class DUMFNet(nn.Module):
         out = F.gelu(F.max_pool2d(self.ebn3(self.encoder3(out)), 2, 2))
         t3 = out
 
-        out=self.mem(out)
+        out = self.mem(out)
         t4 = out
 
         out = F.gelu(F.max_pool2d(self.ebn5(self.encoder5(out)), 2, 2))  # (8,48,8,8)
         t5 = out
 
-        if self.bridge: t1, t2, t3, t4, t5 = self.scab(t1, t2, t3, t4, t5)
-
         out = F.gelu(self.encoder6(out))
+        t6 = out
+
+        if self.bridge: t1, t2, t3, t4, t5, t6 = self.abm(t1, t2, t3, t4, t5, t6)
+
+        out = out + self.t * t6
 
         out5 = F.gelu(self.dbn1(self.decoder1(out)))  ##(8,48,8,8) b, c4, H/32, W/32
         out5 = torch.add(out5, t5)
@@ -357,31 +362,43 @@ class DUMFNet(nn.Module):
         double_out = F.gelu(F.max_pool2d(self.double_ebn5(self.double_encoder5(double_out)), 2, 2))
         double_t5 = double_out
 
-        if self.bridge: double_t1, double_t2, double_t3, double_t4, double_t5 = self.double_scab(double_t1, double_t2, double_t3, double_t4, double_t5)
-
         double_out = F.gelu(self.double_encoder6(double_out))
+        double_t6 = double_out
+
+        if self.bridge: double_t1, double_t2, double_t3, double_t4, double_t5, double_t6 = self.double_abm(double_t1,
+                                                                                                            double_t2,
+                                                                                                            double_t3,
+                                                                                                            double_t4,
+                                                                                                            double_t5,
+                                                                                                            double_t6)
+
+        double_out = double_out + self.t * double_t6
 
         double_out5 = F.gelu(self.double_dbn1(self.double_decoder1(double_out)))
         double_out5 = torch.add(double_out5, double_t5)
 
-        double_out4 = F.gelu(F.interpolate(self.double_dbn2(self.double_decoder2(double_out5)), scale_factor=(2, 2), mode='bilinear',
-                                       align_corners=True))
+        double_out4 = F.gelu(
+            F.interpolate(self.double_dbn2(self.double_decoder2(double_out5)), scale_factor=(2, 2), mode='bilinear',
+                          align_corners=True))
         double_out4 = torch.add(double_out4, double_t4)
 
-        double_out3 = F.gelu(F.interpolate(self.double_dbn3(self.double_decoder3(double_out4)), scale_factor=(2, 2), mode='bilinear',
-                                       align_corners=True))
+        double_out3 = F.gelu(
+            F.interpolate(self.double_dbn3(self.double_decoder3(double_out4)), scale_factor=(2, 2), mode='bilinear',
+                          align_corners=True))
 
         double_out3 = torch.add(double_out3, double_t3)
 
-        double_out2 = F.gelu(F.interpolate(self.double_dbn4(self.double_decoder4(double_out3)), scale_factor=(2, 2), mode='bilinear',
-                                       align_corners=True))
+        double_out2 = F.gelu(
+            F.interpolate(self.double_dbn4(self.double_decoder4(double_out3)), scale_factor=(2, 2), mode='bilinear',
+                          align_corners=True))
         double_out2 = torch.add(double_out2, double_t2)
 
-        double_out1 = F.gelu(F.interpolate(self.double_dbn5(self.double_decoder5(double_out2)), scale_factor=(2, 2), mode='bilinear',
-                                       align_corners=True))
+        double_out1 = F.gelu(
+            F.interpolate(self.double_dbn5(self.double_decoder5(double_out2)), scale_factor=(2, 2), mode='bilinear',
+                          align_corners=True))
         double_out1 = torch.add(double_out1, double_t1)
 
         double_out0 = F.interpolate(self.double_final(double_out1), scale_factor=(2, 2), mode='bilinear',
-                                align_corners=True)
+                                    align_corners=True)
 
-        return torch.sigmoid(out0), torch.sigmoid(double_out0)
+        return (torch.sigmoid(out0), torch.sigmoid(double_out0))
