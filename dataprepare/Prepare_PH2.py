@@ -40,8 +40,6 @@ for idx in range(len(Tr_list)):
          
 print('Reading PH2 finished')
 
-################################################################ Make test sets ########################################
-
 Train_img      = Data_train_PH2[0:140,:,:,:]
 Validation_img = Data_train_PH2[140:140+20,:,:,:]
 Test_img       = Data_train_PH2[140+20:200,:,:,:]
