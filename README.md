@@ -36,7 +36,7 @@ pip install scikit-learn matplotlib thop h5py SimpleITK scikit-image medpy yacs
 
 ## 3. Datasets
 
-You can refer to [UltraLight-VM-UNet's](https://github.com/wurenkai/UltraLight-VM-UNet) approach to processing datasets and then organize the .npy files into the following format:
+For ISIC2017 and ISIC2018, you can refer to [UltraLight-VM-UNet's](https://github.com/wurenkai/UltraLight-VM-UNet) method. For PH2 dataset, please run the Prepare_PH2.py we provide to divide the training set, validation set and test set. Then organize the .npy file into the following format:
 
 './datasets/'
 
