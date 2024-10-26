@@ -1,7 +1,6 @@
 
-"""
-PH2 official data provided by the '.bmp' format, should first batch modify the suffix named '.jpg' or '.png' format before processing.
-"""
+
+# PH2 official data provided by the '.bmp' format, should first batch modify the suffix named '.jpg' or '.png' format before processing.
 
 import h5py
 import numpy as np
