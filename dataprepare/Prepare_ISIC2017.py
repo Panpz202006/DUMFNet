@@ -1,16 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Code created on Sat Jun  8 18:15:43 2019
-@author: Reza Azad
-"""
 
-"""
-Reminder added on December 6, 2023. 
-Reminder Created on Wed Dec 6 2023
-@author: Renkai Wu
-1.Note that the scipy package should need to be degraded. Otherwise, you need to modify the following code. ##scipy==1.2.1
-2.Add a name that displays the file to be processed. If it does not appear, the output npy file is incorrect.
-"""
 
 import h5py
 import numpy as np
