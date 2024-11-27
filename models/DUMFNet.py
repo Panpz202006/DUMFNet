@@ -313,18 +313,16 @@ class DUMFNet(nn.Module):
 
         out = F.gelu(F.max_pool2d(self.ebn5(self.encoder5(out)), 2, 2))  # (8,48,8,8)
         t5 = out
-        res_t5 = t5
 
         out = F.gelu(self.encoder6(out))
         t6 = out
-        res_t6 = t6
 
         if self.bridge: t1, t2, t3, t4, t5, t6 = self.abm(t1, t2, t3, t4, t5, t6)
 
-        out = out + self.t * t6 + self.t * res_t6
+        out = out + self.t * t6
 
         out5 = F.gelu(self.dbn1(self.decoder1(out)))  ##(8,48,8,8) b, c4, H/32, W/32
-        out5 = torch.add(out5, t5) + self.t * res_t5
+        out5 = torch.add(out5, t5)
 
         out4 = F.gelu(F.interpolate(self.dbn2(self.decoder2(out5)), scale_factor=(2, 2), mode='bilinear',
                                     align_corners=True))  # (8,32,16,16) # b, c3, H/16, W/16
@@ -361,11 +359,9 @@ class DUMFNet(nn.Module):
 
         double_out = F.gelu(F.max_pool2d(self.double_ebn5(self.double_encoder5(double_out)), 2, 2))
         double_t5 = double_out
-        double_res_t5 = double_t5
 
         double_out = F.gelu(self.double_encoder6(double_out))
         double_t6 = double_out
-        double_res_t6 = double_t6
 
         if self.bridge: double_t1, double_t2, double_t3, double_t4, double_t5, double_t6 = self.double_abm(double_t1,
                                                                                                             double_t2,
@@ -374,10 +370,10 @@ class DUMFNet(nn.Module):
                                                                                                             double_t5,
                                                                                                             double_t6)
 
-        double_out = double_out + self.t * double_t6 + self.t * double_res_t6
+        double_out = double_out + self.t * double_t6
 
         double_out5 = F.gelu(self.double_dbn1(self.double_decoder1(double_out)))
-        double_out5 = torch.add(double_out5, double_t5) + self.t * double_res_t5
+        double_out5 = torch.add(double_out5, double_t5)
 
         double_out4 = F.gelu(
             F.interpolate(self.double_dbn2(self.double_decoder2(double_out5)), scale_factor=(2, 2), mode='bilinear',
